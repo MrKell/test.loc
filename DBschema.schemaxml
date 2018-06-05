@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemadesigner version="6.5">
+<source>
+<database charset="utf8" collation="utf8_general_ci">yii2</database>
+</source>
+<canvas zoom="100">
+<tables>
+<table name="zak_dms" view="colnames">
+<left>221</left>
+<top>18</top>
+<width>128</width>
+<height>299</height>
+<sql_create_table>CREATE TABLE `zak_dms` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `unnum` varchar(10) DEFAULT NULL COMMENT '001',
+  `dmz_id` int(11) DEFAULT NULL,
+  `dms_status_id` int(11) DEFAULT NULL,
+  `name` varchar(10) DEFAULT NULL,
+  `sum` decimal(10,2) DEFAULT NULL,
+  `end_time` datetime DEFAULT NULL COMMENT 'Дата сдачи позиции',
+  `vip_status` int(11) DEFAULT NULL,
+  `fio_create` varchar(50) DEFAULT NULL,
+  `date_create` datetime DEFAULT NULL,
+  `fio_edit` varchar(50) DEFAULT NULL,
+  `date_edit` datetime DEFAULT NULL,
+  `ftp_maket` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `dmz_id` (`dmz_id`),
+  KEY `dms_status_id` (`dms_status_id`),
+  CONSTRAINT `zak_dms_ibfk_1` FOREIGN KEY (`dmz_id`) REFERENCES `zak_dmz` (`id`),
+  CONSTRAINT `zak_dms_ibfk_2` FOREIGN KEY (`dms_status_id`) REFERENCES `sp_status` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="zak_dmz" view="colnames">
+<left>21</left>
+<top>16</top>
+<width>128</width>
+<height>311</height>
+<sql_create_table>CREATE TABLE `zak_dmz` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `unnum` varchar(15) DEFAULT NULL COMMENT '17-001234',
+  `dmz_status_id` int(11) DEFAULT NULL COMMENT 'СП статусов по заказу',
+  `name` varchar(200) DEFAULT NULL COMMENT 'Название заказа/Если из сайта то пресет',
+  `client_id` int(11) DEFAULT NULL COMMENT 'Клиент',
+  `payman_id` int(11) DEFAULT NULL COMMENT 'Плательщик',
+  `delivery_id` int(11) DEFAULT NULL COMMENT 'СП адресов доставки привязано к клиенту',
+  `end_time` datetime DEFAULT NULL COMMENT 'Дата и время сдачи заказа',
+  `sum` decimal(10,2) DEFAULT NULL COMMENT 'Сумма по заказу в гривне',
+  `fio_create` varchar(50) DEFAULT NULL,
+  `date_create` datetime DEFAULT NULL,
+  `fio_edit` varchar(50) DEFAULT NULL,
+  `date_edit` datetime DEFAULT NULL,
+  `type_oplata` int(11) DEFAULT NULL COMMENT 'Предоплата/Постоплата',
+  PRIMARY KEY (`id`),
+  KEY `client_id` (`client_id`),
+  KEY `payman_id` (`payman_id`),
+  KEY `dmz_status_id` (`dmz_status_id`),
+  CONSTRAINT `zak_dmz_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `client_company` (`id`),
+  CONSTRAINT `zak_dmz_ibfk_2` FOREIGN KEY (`payman_id`) REFERENCES `client_company` (`id`),
+  CONSTRAINT `zak_dmz_ibfk_3` FOREIGN KEY (`dmz_status_id`) REFERENCES `sp_status` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="zak_part" view="colnames">
+<left>403</left>
+<top>16</top>
+<width>114</width>
+<height>214</height>
+<sql_create_table>CREATE TABLE `zak_part` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `dms_id` int(11) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  `kol` int(11) DEFAULT NULL COMMENT 'Тираж',
+  `fio_create` varchar(50) DEFAULT NULL,
+  `date_create` datetime DEFAULT NULL,
+  `fio_edit` varchar(50) DEFAULT NULL,
+  `date_edit` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `dms_id` (`dms_id`),
+  CONSTRAINT `zak_part_ibfk_1` FOREIGN KEY (`dms_id`) REFERENCES `zak_dms` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="zak_print" view="colnames">
+<left>613</left>
+<top>8</top>
+<width>145</width>
+<height>383</height>
+<sql_create_table>CREATE TABLE `zak_print` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `part_id` int(11) DEFAULT NULL,
+  `print_type` int(11) DEFAULT NULL COMMENT 'Тип печати(Спр) тип машины',
+  `format_id` int(11) DEFAULT NULL COMMENT 'Формат заполняет высоту ширину Если Custom то можно вводить произвольные',
+  `height` int(11) DEFAULT NULL COMMENT 'Высота',
+  `width` int(11) DEFAULT NULL COMMENT 'Ширина',
+  `sp_material_type` int(11) DEFAULT NULL,
+  `material_id` int(11) DEFAULT NULL COMMENT 'Тип материала(Спр)картон офсет',
+  `color_id` int(11) DEFAULT NULL COMMENT 'Цветность 1+0 4+4 (Справочник+CMYK+признак пантона)',
+  `pantone_id` int(11) DEFAULT NULL COMMENT 'Справочник пантонов(Pantone)',
+  `pantone_procent` int(11) DEFAULT NULL COMMENT 'Процент заливки пантона',
+  `varnish` int(11) DEFAULT NULL COMMENT 'Справочник Лакировки(Справочник)',
+  `fio_create` varchar(50) DEFAULT NULL,
+  `date_create` datetime DEFAULT NULL,
+  `fio_edit` varchar(50) DEFAULT NULL,
+  `date_edit` datetime DEFAULT NULL,
+  `dpi_id` int(11) DEFAULT NULL COMMENT 'Для широкоформата справочник в котором цена',
+  PRIMARY KEY (`id`),
+  KEY `part_id` (`part_id`),
+  KEY `pantone_id` (`pantone_id`),
+  KEY `print_type` (`print_type`),
+  KEY `format_id` (`format_id`),
+  KEY `color_id` (`color_id`),
+  KEY `sp_material_type` (`sp_material_type`),
+  KEY `material_id` (`material_id`),
+  CONSTRAINT `zak_print_ibfk_1` FOREIGN KEY (`part_id`) REFERENCES `zak_part` (`id`),
+  CONSTRAINT `zak_print_ibfk_3` FOREIGN KEY (`print_type`) REFERENCES `sp_print_type` (`print_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="zak_servise" view="colnames">
+<left>609</left>
+<top>401</top>
+<width>136</width>
+<height>299</height>
+<sql_create_table>CREATE TABLE `zak_servise` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `part_id` int(11) DEFAULT NULL,
+  `service_type_id` int(11) DEFAULT NULL COMMENT 'СП (Прим ламинация/биговка)',
+  `service_id` int(11) DEFAULT NULL COMMENT 'СП Классификатор сервиса',
+  `format_id` int(11) DEFAULT NULL,
+  `height` int(11) DEFAULT NULL,
+  `width` int(11) DEFAULT NULL,
+  `material_id` int(11) DEFAULT NULL COMMENT 'СП Материалов + связь цены из плана закупок',
+  `fio_create` varchar(50) DEFAULT NULL,
+  `date_create` datetime DEFAULT NULL,
+  `fio_edit` varchar(50) DEFAULT NULL,
+  `date_edit` datetime DEFAULT NULL,
+  `service_name` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `part_id` (`part_id`),
+  KEY `format_id` (`format_id`),
+  KEY `material_id` (`material_id`),
+  KEY `service_type_id` (`service_type_id`),
+  KEY `service_id` (`service_id`),
+  CONSTRAINT `zak_servise_ibfk_1` FOREIGN KEY (`part_id`) REFERENCES `zak_part` (`id`),
+  CONSTRAINT `zak_servise_ibfk_3` FOREIGN KEY (`service_type_id`) REFERENCES `sp_service_type` (`id`),
+  CONSTRAINT `zak_servise_ibfk_4` FOREIGN KEY (`service_id`) REFERENCES `sp_service` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="client_company" view="colnames">
+<left>226</left>
+<top>356</top>
+<width>125</width>
+<height>412</height>
+<sql_create_table>CREATE TABLE `client_company` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) DEFAULT '0',
+  `type` varchar(50) DEFAULT NULL COMMENT 'fiz ili company',
+  `balance` decimal(10,2) DEFAULT NULL,
+  `surname` varchar(50) DEFAULT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `second_name` varchar(50) DEFAULT NULL,
+  `phone` varchar(50) DEFAULT NULL,
+  `email` varchar(50) DEFAULT NULL,
+  `company` varchar(200) DEFAULT NULL,
+  `edrpou` int(11) DEFAULT NULL,
+  `inn` int(11) DEFAULT NULL,
+  `ur_adres` varchar(200) DEFAULT NULL,
+  `fiz_adres` varchar(200) DEFAULT NULL,
+  `fio_create` varchar(50) DEFAULT NULL,
+  `date_create` datetime DEFAULT NULL,
+  `fio_edit` varchar(50) DEFAULT NULL,
+  `date_edit` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="client_contact" view="colnames">
+<left>403</left>
+<top>306</top>
+<width>125</width>
+<height>282</height>
+<sql_create_table>CREATE TABLE `client_contact` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `company_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `fisrt_name` varchar(255) DEFAULT NULL,
+  `second_name` varchar(255) DEFAULT NULL,
+  `surname` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `fio_create` varchar(50) DEFAULT NULL,
+  `date_create` datetime DEFAULT NULL,
+  `fio_edit` varchar(50) DEFAULT NULL,
+  `date_edit` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `company_id` (`company_id`),
+  CONSTRAINT `client_contact_ibfk_1` FOREIGN KEY (`company_id`) REFERENCES `client_company` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="sp_status" view="colnames">
+<left>830</left>
+<top>419</top>
+<width>118</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `sp_status` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_status` int(11) DEFAULT NULL COMMENT 'Порядок стадий',
+  `status` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="sp_print_type" view="colnames">
+<left>808</left>
+<top>19</top>
+<width>143</width>
+<height>112</height>
+<sql_create_table>CREATE TABLE `sp_print_type` (
+  `print_id` int(11) NOT NULL AUTO_INCREMENT,
+  `print_type_name` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`print_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="client_oplata" view="colnames">
+<left>428</left>
+<top>616</top>
+<width>113</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `client_oplata` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `client_id` int(10) DEFAULT NULL,
+  `type_oplata` int(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `type_oplata` (`type_oplata`),
+  KEY `client_id` (`client_id`),
+  CONSTRAINT `client_oplata_ibfk_1` FOREIGN KEY (`type_oplata`) REFERENCES `sp_type_oplata` (`id`),
+  CONSTRAINT `client_oplata_ibfk_2` FOREIGN KEY (`client_id`) REFERENCES `client_company` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="sp_type_oplata" view="colnames">
+<left>582</left>
+<top>724</top>
+<width>113</width>
+<height>112</height>
+<sql_create_table>CREATE TABLE `sp_type_oplata` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type_oplata` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="sp_service_type" view="colnames">
+<left>776</left>
+<top>687</top>
+<width>158</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `sp_service_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `print_material_type` int(11) DEFAULT NULL,
+  `service_type` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `print_material_type` (`print_material_type`),
+  CONSTRAINT `sp_service_type_ibfk_1` FOREIGN KEY (`print_material_type`) REFERENCES `sp_print_type` (`print_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="sp_service" view="colnames">
+<left>990</left>
+<top>573</top>
+<width>136</width>
+<height>197</height>
+<sql_create_table>CREATE TABLE `sp_service` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `service_type_id` int(11) DEFAULT NULL,
+  `service_name` varchar(50) DEFAULT NULL,
+  `price_ine_item` decimal(10,2) DEFAULT NULL,
+  `ed_izm_id` int(11) DEFAULT NULL,
+  `formula_count` varchar(500) DEFAULT NULL,
+  `formula_price` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `service_type_id` (`service_type_id`),
+  CONSTRAINT `sp_service_ibfk_1` FOREIGN KEY (`service_type_id`) REFERENCES `sp_service_type` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="sp_format" view="colnames">
+<left>1240</left>
+<top>322</top>
+<width>81</width>
+<height>146</height>
+<sql_create_table>CREATE TABLE `sp_format` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `width` int(11) DEFAULT NULL,
+  `height` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+</tables>
+</canvas>
+</schemadesigner>
