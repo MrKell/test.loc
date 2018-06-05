@@ -5,4 +5,5 @@ To Do Application)
 INSTALLATION
 ------------
 Файлы скопировать в корень
+------------
 Дамп базы данных DATABASE.sql в корне 
